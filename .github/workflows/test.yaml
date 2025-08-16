@@ -8,7 +8,7 @@ on:
 
 jobs: 
   log_message:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Log 
-      run: echo "The Workflow is working!"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log 
+        run: echo "The Workflow is working!"

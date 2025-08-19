@@ -39,22 +39,22 @@ resource "aws_s3_bucket_public_access_block" "static_site_access" {
 #depends_on = [ aws_s3_bucket_public_access_block.static_site_access ]
 #}
  
-resource "aws_route53_zone" "main" {
-  name = "sercodit.com"
-}
+#resource "aws_route53_zone" "main" {
+#  name = "sercodit.com"
+#}
 
-resource "aws_route53_zone" "dev" {
+resource "aws_route53_zone" "main" {
   name = "aws.sercodit.com"
 
   tags = {
-    Environment = "dev"
+    Environment = "sercodit"
   }
 }
 
-resource "aws_route53_record" "dev-ns" {
-  zone_id = aws_route53_zone.main.zone_id
+resource "aws_route53_record" "sercodit-aws-ns" {
+  zone_id = aws_route53_zone.main
   name    = "aws.sercodit.com"
   type    = "NS"
   ttl     = "30"
-  records = aws_route53_zone.dev.name_servers
+  records = aws_route53_zone.main.name_servers
 }

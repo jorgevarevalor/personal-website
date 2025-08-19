@@ -1,0 +1,7 @@
+aws secretsmanager create-secret \
+  --name "/acm/my-cert" \
+  --secret-string "$(jq -n \
+      --arg cert  "$(cat certificate.crt)" \
+      --arg key   "$(cat private.key)" \
+      --arg chain "$(cat ca_bundle.crt)" \
+      '{cert_body:$cert, private_key:$key, cert_chain:$chain}')"

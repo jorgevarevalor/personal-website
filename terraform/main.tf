@@ -93,11 +93,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   viewer_certificate {
     acm_certificate_arn = "arn:aws:acm:us-east-2:849267108111:certificate/672008f6-7d21-4dc7-9258-c39d5580a0a4"
+    ssl_support_method  = "sni-only"
   }
 } 
 
 resource "aws_s3_bucket_policy" "static_site_policy" {
-  bucket = "aws_s3_bucket_policy"
+  bucket = aws_s3_bucket.static_site.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -107,7 +108,7 @@ resource "aws_s3_bucket_policy" "static_site_policy" {
           Service = "cloudfront.amazonaws.com"
         }
         Action = "S3:GetObject"
-        Resource = "${aws_s3_bucket.static_site.bucket}/*"
+        Resource = "${aws_s3_bucket.static_site.arn}/*"
         Condition = {
           StringEquals = {
             "AWS:SourceArn" = aws_cloudfront_distribution.s3_distribution.arn

@@ -119,3 +119,15 @@ resource "aws_s3_bucket_policy" "static_site_policy" {
     ]
   })
 }
+
+resource "aws_route53_record" "cloudfront_alias" {
+  zone_id = "Z059214630Z5FD5Z5P0MP"  
+  name    = "web.aws.sercodit.com"           
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}

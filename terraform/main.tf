@@ -62,7 +62,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   comment             = "Cloudfront Distro for ${aws_s3_bucket.static_site.bucket}"
   default_root_object = "index.html"
 
-  aliases = ["web.aws.sercodit.com", "www.web.sercodit.com"]
+  aliases = ["web.aws.sercodit.com"]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
@@ -92,7 +92,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:849267108111:certificate/7fa561ce-6d41-457e-be07-c8cc27cf34b6"
+    acm_certificate_arn = "arn:aws:acm:us-east-1:849267108111:certificate/30b48d75-9459-4ab4-b9ad-388bbfa67345"
     ssl_support_method  = "sni-only"
   }
 } 

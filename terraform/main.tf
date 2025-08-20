@@ -41,6 +41,7 @@ resource "aws_s3_bucket_public_access_block" "static_site_access" {
 
 
 data "aws_acm_certificate" "sercodit_cert" {
+  provider    = aws.us_east_1
   domain   = "web.aws.sercodit.com"
   statuses = ["ISSUED"]
   most_recent = true

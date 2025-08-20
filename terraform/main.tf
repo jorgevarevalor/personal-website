@@ -132,7 +132,7 @@ data "aws_route53_zone" "sercodit" {
 }
 
 resource "aws_route53_record" "cloudfront_alias" {
-  zone_id = data.aws_route53_zone.selected.zone_id  
+  zone_id = data.aws_route53_zone.sercodit.id  
   name    = "web.aws.sercodit.com"           
   type    = "A"
 

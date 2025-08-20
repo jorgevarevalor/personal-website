@@ -38,7 +38,9 @@ resource "aws_s3_bucket_public_access_block" "static_site_access" {
 #
 #depends_on = [ aws_s3_bucket_public_access_block.static_site_access ]
 #}
- 
+
+
+
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = "oac-${aws_s3_bucket.static_site.bucket}"
   description                       = "OAC for ${aws_s3_bucket.static_site.bucket}"
@@ -93,3 +95,26 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     acm_certificate_arn = "arn:aws:acm:us-east-2:849267108111:certificate/672008f6-7d21-4dc7-9258-c39d5580a0a4"
   }
 } 
+
+resource "aws_s3_bucket_policy" "static_site_policy" {
+  bucket = "aws_s3_bucket_policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action = "S3:GetObject"
+        Resource = "${aws_s3_bucket.static_site.bucket}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.s3_distribution.arn
+          }
+        }
+        
+      }
+    ]
+  })
+}

@@ -40,6 +40,11 @@ resource "aws_s3_bucket_public_access_block" "static_site_access" {
 #}
 
 
+data "aws_acm_certificate" "sercodit_cert" {
+  domain   = "web.aws.sercodit.com"
+  statuses = ["ISSUED"]
+  most_recent = true
+}
 
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = "oac-${aws_s3_bucket.static_site.bucket}"
@@ -92,8 +97,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:849267108111:certificate/30b48d75-9459-4ab4-b9ad-388bbfa67345"
-    ssl_support_method  = "sni-only"
+    acm_certificate_arn      = data.aws_acm_certificate.sercodit_cert.arn
+    ssl_support_method       = "sni-only"
+    
   }
 } 
 
@@ -120,8 +126,13 @@ resource "aws_s3_bucket_policy" "static_site_policy" {
   })
 }
 
+data "aws_route53_zone" "sercodit" {
+  name         = "aws.sercodit.com."
+  private_zone = false
+}
+
 resource "aws_route53_record" "cloudfront_alias" {
-  zone_id = "Z059214630Z5FD5Z5P0MP"  
+  zone_id = data.aws_route53_zone.selected.zone_id  
   name    = "web.aws.sercodit.com"           
   type    = "A"
 
